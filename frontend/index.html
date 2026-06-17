@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>JOMO - AI 技能伙伴</title>
+    <script type="module" src="/src/app.js"></script>
+  </head>
+  <body>
+    <div class="app-shell">
+      <nav class="tab-rail">
+        <div class="brand-mark">Jo</div>
+        <button class="tab-button active" data-tab="jomo" type="button">jomo</button>
+        <button class="tab-button" data-tab="achievements" type="button">成就</button>
+        <button class="tab-button" data-tab="me" type="button">我的</button>
+        <label class="debug-toggle"><input id="debugToggle" type="checkbox" />Debug</label>
+      </nav>
+
+      <aside class="list-rail">
+        <div class="rail-head">
+          <div>
+            <h1>JOMO</h1>
+            <p id="loginLabel">本地登录</p>
+          </div>
+          <button class="icon-button" id="addPartnerButton" type="button">+</button>
+        </div>
+        <section class="tab-view" data-view="jomo">
+          <div class="partner-list" id="partnerList"></div>
+        </section>
+        <section class="tab-view hidden" data-view="achievements">
+          <div class="skill-tree" id="globalSkillTree"></div>
+        </section>
+        <section class="tab-view hidden" data-view="me">
+          <form class="profile-form" id="profileForm">
+            <label>用户名<input id="usernameInput" type="text" pattern="[A-Za-z0-9]{1,30}" maxlength="30" /></label>
+            <label>显示名<input id="displayNameInput" type="text" maxlength="30" /></label>
+            <label>最近想培养的感觉<input id="goalInput" type="text" maxlength="80" /></label>
+            <button class="primary-button" type="submit">保存</button>
+          </form>
+          <button class="secondary-button" id="openAdminButton" type="button">Admin · 学习技能</button>
+        </section>
+      </aside>
+
+      <main class="main-area">
+        <section class="workspace" id="workspace">
+          <div class="chat-panel">
+            <header class="chat-header">
+              <div class="partner-avatar" id="chatAvatar">读</div>
+              <div>
+                <h2 id="chatTitle">选择一个伙伴</h2>
+                <p id="chatSubtitle">从左侧创建 JOMO 伙伴</p>
+              </div>
+              <div class="header-actions">
+                <button class="secondary-button" id="completeGoalButton" type="button">完成小目标</button>
+                <button class="secondary-button" id="skipGoalButton" type="button">下一个目标</button>
+                <button class="secondary-button" id="resetButton" type="button">重置</button>
+              </div>
+            </header>
+            <div class="chat-stream" id="chatStream"></div>
+            <form class="composer" id="chatForm">
+              <label class="upload-button"><input id="imageInput" type="file" accept="image/*,audio/*" /><span>传</span></label>
+              <input id="messageInput" type="text" placeholder="说说你练了什么，也可以让 JOMO 给一个卡片" autocomplete="off" />
+              <button class="send-button" type="submit">发送</button>
+            </form>
+            <section class="panel debug-panel hidden" id="debugPanel">
+              <div class="panel-title"><span>AI Debug 输出</span><button class="text-button" id="clearDebugButton" type="button">清空</button></div>
+              <div class="debug-log" id="debugLog"></div>
+            </section>
+          </div>
+
+          <aside class="detail-rail">
+            <section class="panel plan-card">
+              <div class="panel-title"><span>当前关卡</span><small id="planProgress">0/0</small></div>
+              <div class="goal-timeline" id="goalTimeline"></div>
+            </section>
+            <section class="panel">
+              <div class="panel-title"><span>成长证据</span><small id="evidenceCount">0</small></div>
+              <div class="evidence-list" id="evidenceList"></div>
+            </section>
+          </aside>
+        </section>
+        <section class="admin-page hidden" id="adminPage">
+          <div class="admin-header">
+            <div>
+              <h2>Admin · 学习技能</h2>
+              <p>每个学习技能来自 <code>backend/learning_skills/*/skill.json</code>，可配置允许使用的 agent skill。</p>
+            </div>
+            <button class="secondary-button" id="backFromAdminButton" type="button">回到 JOMO</button>
+          </div>
+          <form class="admin-editor" id="adminForm">
+            <label>学习技能<select id="adminSkillSelect"></select></label>
+            <div class="agent-skill-box">
+              <strong>允许使用的 agent skill</strong>
+              <div id="adminAgentSkillList"></div>
+            </div>
+            <label>学习技能 JSON<textarea id="adminPlanInput" rows="20"></textarea></label>
+            <button class="primary-button" type="submit">保存学习技能</button>
+          </form>
+        </section>
+      </main>
+    </div>
+
+    <dialog class="modal" id="loginModal">
+      <form method="dialog" class="modal-card" id="loginForm">
+        <div class="modal-header"><h2>进入 JOMO</h2></div>
+        <p class="modal-copy">第一次只需要一个本地用户名，英文字母和数字，最多 30 个字符。</p>
+        <label>用户名<input id="loginUsernameInput" type="text" pattern="[A-Za-z0-9]{1,30}" maxlength="30" value="jomo2026" /></label>
+        <button class="primary-button" value="default" type="submit">进入</button>
+      </form>
+    </dialog>
+
+    <dialog class="modal" id="partnerModal">
+      <form method="dialog" class="modal-card" id="partnerForm">
+        <div class="modal-header"><h2>创建伙伴</h2><button class="icon-button" value="cancel" type="submit">×</button></div>
+        <div class="skill-options" id="skillOptions"></div>
+        <div class="custom-skill-box">
+          <strong>自己创建技能</strong>
+          <label>技能名<input id="customSkillTitle" type="text" placeholder="比如：咖啡拉花" maxlength="24" /></label>
+          <label>想达到的等级<input id="customSkillLevel" type="text" placeholder="比如：能独立完成基础图案" maxlength="50" /></label>
+          <button class="secondary-button" id="createCustomSkillButton" type="button">生成训练大纲</button>
+        </div>
+        <label>伙伴名字<input id="partnerNameInput" type="text" maxlength="24" /></label>
+        <div class="modal-actions">
+          <button class="secondary-button" value="cancel" type="submit">取消</button>
+          <button class="primary-button" value="default" type="submit">生成伙伴和计划</button>
+        </div>
+      </form>
+    </dialog>
+
+  </body>
+</html>

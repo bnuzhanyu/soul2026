@@ -1,0 +1,35 @@
+{
+  "id": "speed-reading",
+  "name": "速读技巧",
+  "tags": ["阅读"],
+  "image": "https://images.unsplash.com/photo-1481627834876-b7833e8f5570?auto=format&fit=crop&w=480&q=80",
+  "strategy": "timed_reading",
+  "tone": "清晰、轻快、关注理解率和复述质量",
+  "starter": "做一段 45 秒速读，再完成两道理解选择题。",
+  "agentSkills": [],
+  "plan": {
+    "title": "15 天速读理解提升",
+    "goals": [
+      {
+        "id": "g1",
+        "title": "建立阅读节奏",
+        "days": "1-10",
+        "outcome": "能在限定时间内读完短文，并说出一句中心思想。",
+        "milestones": [
+          {"id": "g1-m1", "title": "预览结构", "description": "先看标题、开头、结尾，判断文章方向。"},
+          {"id": "g1-m2", "title": "减少回读", "description": "用手指或光标带节奏，读完再回想。"}
+        ]
+      },
+      {
+        "id": "g2",
+        "title": "提升理解准确率",
+        "days": "11-15",
+        "outcome": "能答对 2 道理解题，并解释为什么。",
+        "milestones": [
+          {"id": "g2-m1", "title": "关键词捕捉", "description": "每段抓 1 个关键词。"},
+          {"id": "g2-m2", "title": "选择题复盘", "description": "用错题找到阅读漏洞。"}
+        ]
+      }
+    ]
+  }
+}

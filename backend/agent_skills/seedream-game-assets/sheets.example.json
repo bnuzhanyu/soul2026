@@ -1,0 +1,15 @@
+{
+  "prompt": "是男人就下100层：四种颜色的球，卡通高级感；尖刺横杆与正常横杆",
+  "sheets": [
+    {
+      "rows": 2,
+      "cols": 2,
+      "assetNames": ["ball_red.png", "ball_blue.png", "ball_green.png", "ball_yellow.png"]
+    },
+    {
+      "rows": 1,
+      "cols": 2,
+      "assetNames": ["bar_spike.png", "bar_normal.png"]
+    }
+  ]
+}

@@ -1,0 +1,35 @@
+{
+  "id": "meditation",
+  "name": "冥想训练",
+  "tags": ["宠物"],
+  "image": "https://images.unsplash.com/photo-1506126613408-eca07ce68773?auto=format&fit=crop&w=480&q=80",
+  "strategy": "mindfulness",
+  "tone": "柔软、稳定、不过度解释感受",
+  "starter": "做 3 分钟呼吸观察，只需要数 10 次呼吸。",
+  "agentSkills": [],
+  "plan": {
+    "title": "30 天松弛注意力训练",
+    "goals": [
+      {
+        "id": "g1",
+        "title": "把注意力带回来",
+        "days": "1-15",
+        "outcome": "能完成 3-5 分钟呼吸观察。",
+        "milestones": [
+          {"id": "g1-m1", "title": "数呼吸", "description": "从 1 数到 10，走神就轻轻回来。"},
+          {"id": "g1-m2", "title": "身体扫描", "description": "观察肩膀、下颌和腹部的放松感。"}
+        ]
+      },
+      {
+        "id": "g2",
+        "title": "形成稳定仪式",
+        "days": "16-30",
+        "outcome": "能在焦虑时用 1 分钟回到身体。",
+        "milestones": [
+          {"id": "g2-m1", "title": "情绪命名", "description": "用一句话说出此刻感受。"},
+          {"id": "g2-m2", "title": "一分钟复位", "description": "用呼吸和触感把自己放回当下。"}
+        ]
+      }
+    ]
+  }
+}

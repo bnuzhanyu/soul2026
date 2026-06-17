@@ -1,0 +1,37 @@
+{
+  "id": "doodle",
+  "name": "简笔画",
+  "tags": ["绘画", "文艺"],
+  "image": "https://images.unsplash.com/photo-1513364776144-60967b0f800f?auto=format&fit=crop&w=480&q=80",
+  "strategy": "creative_review",
+  "tone": "轻松、鼓励、用少量建议提升观察",
+  "starter": "画一个杯子，用圆形和直线把它变可爱。",
+  "targetPrompt": "生成一张干净可爱的简笔画目标图：一个由圆形、椭圆和直线组成的小杯子，线条清楚，适合初学者照着画。",
+  "reviewRubric": "评分时先判断是否像今日目标杯子，再看是否用了圆形/椭圆/直线、线条是否清楚、整体是否可爱。给完成度 1-10、美观度 1-10，并只给一个下次小建议。",
+  "agentSkills": ["seedream-game-assets", "mimo-image-understanding"],
+  "plan": {
+    "title": "30 天简笔画表达",
+    "goals": [
+      {
+        "id": "g1",
+        "title": "把物体拆成形状",
+        "days": "1-15",
+        "outcome": "能用圆、方、三角画出 10 个日常物品。",
+        "milestones": [
+          {"id": "g1-m1", "title": "基础形状", "description": "每天用 3 个形状拆一个物品。"},
+          {"id": "g1-m2", "title": "线条控制", "description": "画 20 条稳定短线和 10 个圆。"}
+        ]
+      },
+      {
+        "id": "g2",
+        "title": "画出可爱和情绪",
+        "days": "16-30",
+        "outcome": "能让物品有表情、姿态和小故事。",
+        "milestones": [
+          {"id": "g2-m1", "title": "表情变化", "description": "给同一个物体画 4 种表情。"},
+          {"id": "g2-m2", "title": "场景组合", "description": "把 3 个小物件组合成一张小画。"}
+        ]
+      }
+    ]
+  }
+}

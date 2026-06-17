@@ -1,0 +1,35 @@
+{
+  "id": "diving-rules",
+  "name": "跳水动作规则",
+  "tags": ["跳水", "体育"],
+  "image": "https://images.unsplash.com/photo-1530549387789-4c1017266635?auto=format&fit=crop&w=480&q=80",
+  "strategy": "rule_coaching",
+  "tone": "专业但不压迫，像场边教练一样拆动作和规则",
+  "starter": "认识一个跳水动作代码，并判断起跳、姿态、入水三个看点。",
+  "agentSkills": [],
+  "plan": {
+    "title": "30 天跳水规则入门",
+    "goals": [
+      {
+        "id": "g1",
+        "title": "看懂动作代码",
+        "days": "1-15",
+        "outcome": "能说出组别、姿态和翻腾方向。",
+        "milestones": [
+          {"id": "g1-m1", "title": "动作组别", "description": "区分向前、向后、反身、向内、转体、臂立。"},
+          {"id": "g1-m2", "title": "姿态识别", "description": "识别直体、屈体、抱膝、任意姿态。"}
+        ]
+      },
+      {
+        "id": "g2",
+        "title": "建立评分眼光",
+        "days": "16-30",
+        "outcome": "能用 3 个指标给一次动作做初步评价。",
+        "milestones": [
+          {"id": "g2-m1", "title": "起跳质量", "description": "看高度、方向和身体控制。"},
+          {"id": "g2-m2", "title": "入水判断", "description": "观察垂直度、水花和身体线条。"}
+        ]
+      }
+    ]
+  }
+}

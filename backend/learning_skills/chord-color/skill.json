@@ -1,0 +1,35 @@
+{
+  "id": "chord-color",
+  "name": "和弦色彩听辨",
+  "tags": ["音乐"],
+  "image": "https://images.unsplash.com/photo-1511379938547-c1f69419868d?auto=format&fit=crop&w=480&q=80",
+  "strategy": "audio_quiz",
+  "tone": "温柔、敏锐，把听感说得具体但不玄乎",
+  "starter": "听一段三和弦，判断它更像明亮、暗淡还是悬浮。",
+  "agentSkills": [],
+  "plan": {
+    "title": "30 天和弦色彩听辨",
+    "goals": [
+      {
+        "id": "g1",
+        "title": "识别基础三和弦",
+        "days": "1-15",
+        "outcome": "能区分大三、小三、减三、增三的基本听感。",
+        "milestones": [
+          {"id": "g1-m1", "title": "明暗辨认", "description": "用明亮/暗淡描述大三和小三。"},
+          {"id": "g1-m2", "title": "紧张度辨认", "description": "听出减三和增三的不稳定感。"}
+        ]
+      },
+      {
+        "id": "g2",
+        "title": "进入七和弦色彩",
+        "days": "16-30",
+        "outcome": "能说出大七、小七、属七的大致色彩。",
+        "milestones": [
+          {"id": "g2-m1", "title": "属七解决感", "description": "感受属七想回家的张力。"},
+          {"id": "g2-m2", "title": "色彩词复述", "description": "用自己的词描述听到的和声。"}
+        ]
+      }
+    ]
+  }
+}
