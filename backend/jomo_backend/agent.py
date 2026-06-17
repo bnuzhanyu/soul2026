@@ -26,7 +26,6 @@ ROOT = Path(__file__).resolve().parents[2]
 RUN_DIR = Path(os.getenv("JOMO_AGENT_RUN_DIR", ROOT / ".run" / "jomo-agent")).resolve()
 CLAUDE_DIR = Path(os.getenv("JOMO_CLAUDE_DIR", ROOT / ".run" / "claude")).resolve()
 ASSETS_DIR = Path(os.getenv("JOMO_AGENT_ASSETS_DIR", ROOT / ".run" / "jomo-assets")).resolve()
-REFERENCE_SEEDREAM_SKILL = Path("/Users/zhanyu/work/gitlab/one-command-games/deepagent_service/claude/skills/seedream-game-assets")
 LOCAL_AGENT_SKILLS_DIR = ROOT / "backend" / "agent_skills"
 DEFAULT_MODEL = "claude-sonnet-4-20250514"
 
@@ -36,7 +35,8 @@ async def stream_agent_events(payload: dict[str, Any]) -> AsyncIterator[tuple[st
     skill = payload.get("skill") or {}
     profile = payload.get("profile") or {}
     model = (os.getenv("CLAUDE_AGENT_MODEL") or os.getenv("ANTHROPIC_MODEL") or DEFAULT_MODEL).removeprefix("anthropic:")
-    session_id = stable_session_id(partner, profile=profile)
+    base_session_id = stable_session_id(partner, profile=profile)
+    session_id = agent_session_id(base_session_id, skill)
     session_dir = RUN_DIR / safe_key(session_id)
     session_store_dir = session_dir / "sessions"
     asset_dir = ASSETS_DIR / safe_key(session_id)
@@ -45,14 +45,20 @@ async def stream_agent_events(payload: dict[str, Any]) -> AsyncIterator[tuple[st
     sync_agent_skills(skill)
     before_assets = asset_snapshot(asset_dir)
 
-    can_resume = jsonl_session_has_history(session_store_dir, session_id)
+    required_skills = list(skill.get("agentSkills") or [])
+    has_history = jsonl_session_has_history(session_store_dir, session_id)
+    skills_ready = session_has_required_skills(session_store_dir, session_id, required_skills)
+    can_resume = has_history and skills_ready
     reply_parts: list[str] = []
 
     yield "agent.session", {
         "provider": "anthropic",
         "model": model or "default",
         "sessionId": session_id,
+        "baseSessionId": base_session_id,
+        "agentSkills": required_skills,
         "resume": can_resume,
+        "resumeBlockedReason": "" if can_resume or not has_history else "session skill listing is missing required skills",
         "sessionDir": str(session_dir),
     }
 
@@ -364,6 +370,14 @@ def stable_session_id(partner: dict[str, Any], *, profile: dict[str, Any] | None
         return str(uuid.uuid5(uuid.NAMESPACE_URL, f"jomo:{raw}"))
 
 
+def agent_session_id(base_session_id: str, skill: dict[str, Any]) -> str:
+    agent_skills = sorted(str(item) for item in (skill.get("agentSkills") or []) if str(item).strip())
+    if not agent_skills:
+        return base_session_id
+    signature = ",".join(agent_skills)
+    return str(uuid.uuid5(uuid.NAMESPACE_URL, f"jomo-agent:{base_session_id}:skills:{signature}"))
+
+
 def safe_key(value: str) -> str:
     cleaned = re.sub(r"[^\w_.-]+", "-", str(value).strip(), flags=re.UNICODE).strip("-")[:96]
     return cleaned or hashlib.sha256(str(value).encode("utf-8")).hexdigest()[:24]
@@ -410,8 +424,6 @@ def sync_agent_skills(skill: dict[str, Any]) -> None:
         if not re.fullmatch(r"[A-Za-z0-9_.-]{1,80}", str(name)):
             continue
         source = LOCAL_AGENT_SKILLS_DIR / str(name)
-        if not source.exists() and name == "seedream-game-assets":
-            source = REFERENCE_SEEDREAM_SKILL
         target = target_root / str(name)
         if not source.exists():
             continue
@@ -459,6 +471,42 @@ def jsonl_session_has_history(store_dir: Path, session_id: str) -> bool:
         if nested.is_dir() and any(nested.iterdir()):
             return True
     return False
+
+
+def session_has_required_skills(store_dir: Path, session_id: str, required_skills: list[str]) -> bool:
+    required = {str(item) for item in required_skills if str(item).strip()}
+    if not required:
+        return True
+    listings = []
+    for path in session_jsonl_paths(store_dir, session_id):
+        try:
+            text = path.read_text("utf-8", errors="ignore")
+        except OSError:
+            continue
+        for line in text.splitlines():
+            if '"skill_listing"' not in line:
+                continue
+            listings.append(line)
+    if not listings:
+        return True
+    joined = "\n".join(listings)
+    return all(skill_name in joined for skill_name in required)
+
+
+def session_jsonl_paths(store_dir: Path, session_id: str) -> list[Path]:
+    if not store_dir.exists():
+        return []
+    paths: list[Path] = []
+    for project_dir in store_dir.iterdir():
+        if not project_dir.is_dir():
+            continue
+        main_jsonl = project_dir / f"{session_id}.jsonl"
+        if main_jsonl.is_file():
+            paths.append(main_jsonl)
+        nested = project_dir / session_id
+        if nested.is_dir():
+            paths.extend(path for path in nested.rglob("*.jsonl") if path.is_file())
+    return paths
 
 
 class JsonlSessionStore:
